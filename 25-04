@@ -1,0 +1,94 @@
+#include <iostream>
+
+using namespace std;
+
+class DynamicIntegerArray{
+    
+private:
+    int *data;
+    int size;
+    
+public:
+    DynamicIntegerArray(){
+        this->size = 0;
+        data = new int[0];
+    }
+    
+    DynamicIntegerArray(int arr[], int size){
+        this->size = size;
+        data = new int[size];
+        for(int i=0; i<size; i++)
+            data[i] = arr[i];
+    }
+    
+    DynamicIntegerArray(const DynamicIntegerArray &n){
+        this->size = n.size;
+        data = new int[n.size];
+        for(int i=0; i<n.size; i++)
+            data[i] = n.data[i];
+    }
+    
+    void print() const{
+        cout<<"[ ";
+        for(int i=0; i<size; i++)
+            cout<< data[i] << " ";
+        cout<<"]"<<endl;
+    }
+    
+    ~DynamicIntegerArray(){
+        delete[] data;
+    }
+    
+    void PushBack(int val){
+        this->size++;
+        int *list = new int [size];
+        list[0] = val;
+        for(int i=0; i<size; i++){
+            list[i] = data[i-1];
+        }
+        delete[] data;
+        data = list;
+    }
+    
+    void Insert(int val, int pos){
+        this->size++;
+        pos--;
+        int *list = new int [size];
+        for(int i=0; i<size; i++)
+            list[i] = data[i];
+        for(int i=size-1; i>pos-1; i--)
+            list[i] = data[i-1];
+        list[pos] = val;
+        delete[] data;
+        data = list;
+    }
+    
+    void remove(int pos){
+        this->size--;
+        pos--;
+        int *list = new int [size];
+        
+        for(int i=0; i<size; i++){
+            if(i>pos)
+                list[i-1] = data[i];
+            else
+                list[i] = data[i];
+        }
+ 
+        delete[] data;
+        data = list;
+    }
+};
+
+int main(){
+    int list[5] = {1,2,3,4,5};
+    DynamicIntegerArray L(list,5);
+    L.print();
+    L.PushBack(4);
+    L.print();
+    L.Insert(8,4);
+    L.print();
+    L.remove(2);
+    L.print();
+    return 0;
+}
